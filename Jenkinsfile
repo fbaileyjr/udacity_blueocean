@@ -5,6 +5,14 @@ pipeline {
             steps {
                 sh 'tidy -q -e *.html'
             }
+        stage('Upload to AWS') {
+            steps {
+                withAWS(region:'us-east-2',credentials:'fbailey') {
+                sh 'echo "Uploading content with AWS credentials"'
+                    s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file:'index.html', bucket:'udacity-m3-l2-pipelines')
+                    }
+                }
+            }
         }
     }
 }
